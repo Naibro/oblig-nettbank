@@ -35,14 +35,15 @@ public class EnhetstestBankController {
     // denne skal Mock'es
     private Sikkerhet sjekk;
 
+    //test av hentTransaksjoner
     @Test
-    public void hentTransaksjoner(){
+    public void test_hentTransaksjonerOK(){
         // arrange
         List<Transaksjon> test = new ArrayList<>();
         Konto randomKonto = new Konto("01010110523","105010123456",619.50,"Lønnskonto","NOK",test);
 
-        when(sjekk.loggetInn()).thenReturn("01010110523");
-        when(repository.hentTransaksjoner(anyString(),anyString(),anyString()).thenReturn(randomKonto);
+        /*when(sjekk.loggetInn()).thenReturn("01010110523");*/
+        when(repository.hentTransaksjoner("105010123456","2000-04-02","2023-02-04").thenReturn(randomKonto.setTransaksjoner(test));
 
         // act
         Konto resultat = bankController.hentTransaksjoner("105010123456","2000-04-02","2023-02-04");

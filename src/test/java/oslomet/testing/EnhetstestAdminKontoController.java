@@ -13,7 +13,7 @@ import oslomet.testing.DAL.AdminRepository;
 public class EnhetstestAdminKontoController {
 
     @InjectMocks
-    private AdminKontoController adminKontoController
+    private AdminKontoController adminKontoController;
 
     @Mock
     private AdminRepository repository;

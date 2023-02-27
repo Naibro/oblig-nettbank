@@ -52,6 +52,23 @@ public class EnhetstestBankController {
         assertEquals(randomKonto, resultat);
     }
 
+    //test av hentTransaksjoner
+    @Test
+    public void test_hentTransaksjonerFeil(){
+        // arrange
+        List<Transaksjon> test = new ArrayList<>();
+        Konto randomKonto = new Konto("01010110523","105010123456",619.50,"Lønnskonto","NOK",test);
+
+        when(sjekk.loggetInn()).thenReturn("01010110523");
+        when(repository.hentTransaksjoner("105010123456","2002-04-02","2023-01-01")).thenReturn(randomKonto);
+
+        // act
+        Konto resultat = bankController.hentTransaksjoner("105010123456","2002-04-02","2023-01-01");
+
+        // assert
+        assertEquals(null, resultat);
+    }
+
     @Test
     public void hentKundeInfo_loggetInn() {
 

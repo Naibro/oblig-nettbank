@@ -181,14 +181,14 @@ public class EnhetstestBankController {
     public void hentBetalinger_loggetInn(){
         // arrange
         List<Transaksjon> test = new ArrayList<>();
-        Transaksjon tilfeldigTransaksjon = new Transaksjon(3, "105010123456", 36,
-                "2020-05-05", "Pizza", "1", "123123123123");
-        Transaksjon tilfeldigTransaksjon2 = new Transaksjon(5, "105010123456", 80,
-                "2020-05-06", "Bolle", "1", "123123123123");
+        Transaksjon tilfeldigTransaksjon = new Transaksjon(1, "20102012345", 20,
+                "2020-05-05", "Iskrem", "1", "105010123456");
+        Transaksjon tilfeldigTransaksjon2 = new Transaksjon(2, "20102012345", 50,
+                "2020-05-06", "Smash", "1", "105010123456");
         test.add(tilfeldigTransaksjon);
         test.add(tilfeldigTransaksjon2);
         when(sjekk.loggetInn()).thenReturn("01010110523");
-        when(repository.hentBetalinger("01010110523")).thenReturn(test);
+        when(repository.hentBetalinger(anyString())).thenReturn(test);
 
         // act
         List<Transaksjon> resultat = bankController.hentBetalinger();
@@ -209,24 +209,20 @@ public class EnhetstestBankController {
         assertNull(resultat);
     }
 
-    @Test // feil testing trengs
+    @Test
     public void utforBetaling_loggetInn(){
         // arrange
         List<Transaksjon> test = new ArrayList<>();
-        Transaksjon tilfeldigTransaksjon = new Transaksjon(3, "105010123456", 20,
-                "2020-05-05", "Iskrem", "1", "123123123123");
+        Transaksjon tilfeldigTransaksjon = new Transaksjon(1, "20102012345", 20,
+                "2020-05-05", "Iskrem", "1", "105010123456");
         test.add(tilfeldigTransaksjon);
 
-        List<Konto> konti = new ArrayList<>();
-        Konto konto1 = new Konto("105010123456", "01010110523",
-                720, "Lønnskonto", "NOK", null);
-        konti.add(konto1);
-
         when(sjekk.loggetInn()).thenReturn("01010110523");
-        when(repository.utforBetaling(3)).thenReturn("OK");
+        when(repository.hentBetalinger(anyString())).thenReturn(test);
+        when(repository.utforBetaling(anyInt())).thenReturn("OK");
 
         // act
-        List<Transaksjon> resultat = bankController.utforBetaling(3);
+        List<Transaksjon> resultat = bankController.utforBetaling(1);
 
         // assert
         assertEquals(test, resultat);
@@ -234,12 +230,27 @@ public class EnhetstestBankController {
 
     @Test
     public void utforBetaling_loggetInn_Feil(){
+        // arrange
+        when(sjekk.loggetInn()).thenReturn("01010110523");
+        when(repository.utforBetaling(anyInt())).thenReturn("Feil");
 
+        // act
+        List<Transaksjon> resultat = bankController.utforBetaling(1);
+
+        // assert
+        assertNull(resultat);
     }
 
     @Test
     public void utforBetaling_IkkeLoggetInn(){
+        // arrange
+        when(sjekk.loggetInn()).thenReturn(null);
 
+        // act
+        List<Transaksjon> resultat = bankController.utforBetaling(1);
+
+        // assert
+        assertNull(resultat);
     }
 
     @Test
@@ -271,19 +282,89 @@ public class EnhetstestBankController {
         assertNull(resultat);
     }
 
-    @Test // feil testing trengs
-    public void endreKundeInfo_loggetInn(){
+    @Test
+    public void endreKundeInfo_loggetInn_Poststed(){
+        // arrange
+        Kunde endretKunde = new Kunde("01010110523",
+                "Lana", "Jensen", "Askerveien 25", "3270",
+                "Asker", "22225555", "HeiHei");
 
+
+        when(sjekk.loggetInn()).thenReturn("01010110523");
+        when(repository.endreKundeInfo(any(Kunde.class))).thenReturn("OK");
+
+        // act
+        String resultat = bankController.endre(endretKunde);
+
+        // assert
+        assertEquals("OK", resultat);
+    }
+
+    @Test
+    public void endreKundeInfo_loggetInn_nyttPoststed(){
+        // arrange
+        Kunde endretKunde_nyttPoststed = new Kunde("01010110523",
+                "Lene", "Jensen", "Askerveien 22", "4033",
+                "Stavanger", "22224444", "HeiHei");
+
+        when(sjekk.loggetInn()).thenReturn("01010110523");
+        when(repository.endreKundeInfo(any(Kunde.class))).thenReturn("OK");
+
+        // act
+        String resultat = bankController.endre(endretKunde_nyttPoststed);
+
+        // assert
+        assertEquals("OK", resultat);
     }
 
     @Test
     public void endreKundeInfo_loggetInn_Feil(){
+        // arrange
+        Kunde enKunde = new Kunde("01010110523",
+                "Lene", "Jensen", "Askerveien 22", "4033",
+                "Stavanger", "22224444", "HeiHei");
 
+        when(sjekk.loggetInn()).thenReturn("01010110523");
+        when(repository.endreKundeInfo(any(Kunde.class))).thenReturn("Feil");
+
+        // act
+        String resultat = bankController.endre(enKunde);
+
+        // assert
+        assertEquals("Feil", resultat);
+    }
+
+    @Test
+    public void endreKundeInfo_loggetInn_PoststedFeil(){
+        // arrange
+        Kunde enKunde = new Kunde("01010110523",
+                "Lene", "Jensen", "Askerveien 22", "4033",
+                "Stavanger", "22224444", "HeiHei");
+
+        when(sjekk.loggetInn()).thenReturn("01010110523");
+        when(repository.endreKundeInfo(any(Kunde.class))).thenReturn("Feil");
+
+        // act
+        String resultat = bankController.endre(enKunde);
+
+        // assert
+        assertEquals("Feil", resultat);
     }
 
     @Test
     public void endreKundeInfo_IkkeLoggetInn(){
+        // arrange
+        Kunde enKunde = new Kunde("01010110523",
+                "Lene", "Jensen", "Askerveien 22", "3270",
+                "Asker", "22224444", "HeiHei");
 
+        when(sjekk.loggetInn()).thenReturn(null);
+
+        //act
+        String resultat = bankController.endre(enKunde);
+
+        // assert
+        assertNull(resultat);
     }
 }
 

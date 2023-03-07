@@ -320,15 +320,15 @@ public class EnhetstestBankController {
     @Test
     public void endreKundeInfo_loggetInn_Feil(){
         // arrange
-        Kunde enKunde = new Kunde("01010110523",
-                "Lene", "Jensen", "Askerveien 22", "4033",
-                "Stavanger", "22224444", "HeiHei");
+        Kunde endretKunde = new Kunde("01010110523",
+                "Lana", "Jensen", "Askerveien 25", "3270",
+                "Asker", "22225555", "HeiHei");
 
         when(sjekk.loggetInn()).thenReturn("01010110523");
         when(repository.endreKundeInfo(any(Kunde.class))).thenReturn("Feil");
 
         // act
-        String resultat = bankController.endre(enKunde);
+        String resultat = bankController.endre(endretKunde);
 
         // assert
         assertEquals("Feil", resultat);
@@ -337,7 +337,7 @@ public class EnhetstestBankController {
     @Test
     public void endreKundeInfo_loggetInn_PoststedFeil(){
         // arrange
-        Kunde enKunde = new Kunde("01010110523",
+        Kunde endretKunde_nyttPoststed = new Kunde("01010110523",
                 "Lene", "Jensen", "Askerveien 22", "4033",
                 "Stavanger", "22224444", "HeiHei");
 
@@ -345,7 +345,7 @@ public class EnhetstestBankController {
         when(repository.endreKundeInfo(any(Kunde.class))).thenReturn("Feil");
 
         // act
-        String resultat = bankController.endre(enKunde);
+        String resultat = bankController.endre(endretKunde_nyttPoststed);
 
         // assert
         assertEquals("Feil", resultat);
@@ -354,14 +354,14 @@ public class EnhetstestBankController {
     @Test
     public void endreKundeInfo_IkkeLoggetInn(){
         // arrange
-        Kunde enKunde = new Kunde("01010110523",
+        Kunde endretKunde = new Kunde("01010110523",
                 "Lene", "Jensen", "Askerveien 22", "3270",
                 "Asker", "22224444", "HeiHei");
 
         when(sjekk.loggetInn()).thenReturn(null);
 
         //act
-        String resultat = bankController.endre(enKunde);
+        String resultat = bankController.endre(endretKunde);
 
         // assert
         assertNull(resultat);

@@ -17,7 +17,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -36,23 +36,23 @@ public class EnhetstestBankController {
     private Sikkerhet sjekk;
 
     @Test
-    public void test_hentTransaksjonerLoggetInn(){
+    public void hentTransaksjonerLoggetInn(){
         // arrange
         List<Transaksjon> test = new ArrayList<>();
-        Konto randomKonto = new Konto("01010110523","105010123456",619.50,"Lønnskonto","NOK",test);
+        Konto tilfeldigKonto = new Konto("01010110523","105010123456",619.50,"Lønnskonto","NOK",test);
 
         when(sjekk.loggetInn()).thenReturn("01010110523");
-        when(repository.hentTransaksjoner("105010123456","2002-04-02","2023-01-01")).thenReturn(randomKonto);
+        when(repository.hentTransaksjoner("105010123456","2002-04-02","2023-01-01")).thenReturn(tilfeldigKonto);
 
         // act
         Konto resultat = bankController.hentTransaksjoner("105010123456","2002-04-02","2023-01-01");
 
         // assert
-        assertEquals(randomKonto, resultat);
+        assertEquals(tilfeldigKonto, resultat);
     }
 
     @Test
-    public void test_hentTransaksjonerIkkeLoggetInn(){
+    public void hentTransaksjonerIkkeLoggetInn(){
         // arrange
         when(sjekk.loggetInn()).thenReturn(null);
 
@@ -133,26 +133,107 @@ public class EnhetstestBankController {
 
     @Test
     public void registrerBetaling_loggetInn(){
+        // arrange
+        Transaksjon tilfeldigTransaksjon = new Transaksjon(3, "105010123456", 36,
+                "2020-05-05", "Pizza", "1", "123123123123");
 
+        when(sjekk.loggetInn()).thenReturn("01010110523");
+        when(repository.registrerBetaling(any(Transaksjon.class))).thenReturn("OK");
+
+        // act
+        String resultat = bankController.registrerBetaling(tilfeldigTransaksjon);
+
+        // assert
+        assertEquals("OK", resultat);
+    }
+
+    @Test
+    public void registrerBetaling_loggetInn_Feil(){
+        // arrange
+        Transaksjon tilfeldigTransaksjon = new Transaksjon(3, "105010123456", 36,
+                "2020-05-05", "Pizza", "1", "123123123123");
+
+        when(sjekk.loggetInn()).thenReturn("01010110523");
+        when(repository.registrerBetaling(any(Transaksjon.class))).thenReturn("Feil");
+
+        // act
+        String resultat = bankController.registrerBetaling(tilfeldigTransaksjon);
+
+        // assert
+        assertEquals("Feil", resultat);
     }
 
     @Test
     public void registrerBetaling_IkkeLoggetInn(){
+        // arrange
+        Transaksjon tilfeldigTransaksjon = new Transaksjon(3, "105010123456", 36,
+                "2020-05-05", "Pizza", "1", "123123123123");
+        when(sjekk.loggetInn()).thenReturn(null);
 
+        // act
+        String resultat = bankController.registrerBetaling(tilfeldigTransaksjon);
+
+        // assert
+        assertNull(resultat);
     }
 
     @Test
-    public void hentBetaling_loggetInn(){
+    public void hentBetalinger_loggetInn(){
+        // arrange
+        List<Transaksjon> test = new ArrayList<>();
+        Transaksjon tilfeldigTransaksjon = new Transaksjon(3, "105010123456", 36,
+                "2020-05-05", "Pizza", "1", "123123123123");
+        Transaksjon tilfeldigTransaksjon2 = new Transaksjon(5, "105010123456", 80,
+                "2020-05-06", "Bolle", "1", "123123123123");
+        test.add(tilfeldigTransaksjon);
+        test.add(tilfeldigTransaksjon2);
+        when(sjekk.loggetInn()).thenReturn("01010110523");
+        when(repository.hentBetalinger("01010110523")).thenReturn(test);
 
+        // act
+        List<Transaksjon> resultat = bankController.hentBetalinger();
+
+        // assert
+        assertEquals(test, resultat);
     }
 
     @Test
-    public void hentBetaling_IkkeLoggetInn(){
+    public void hentBetalinger_IkkeLoggetInn(){
+        // arrange
+        when(sjekk.loggetInn()).thenReturn(null);
 
+        // act
+        List<Transaksjon> resultat = bankController.hentBetalinger();
+
+        // assert
+        assertNull(resultat);
     }
 
-    @Test
+    @Test // feil testing trengs
     public void utforBetaling_loggetInn(){
+        // arrange
+        List<Transaksjon> test = new ArrayList<>();
+        Transaksjon tilfeldigTransaksjon = new Transaksjon(3, "105010123456", 20,
+                "2020-05-05", "Iskrem", "1", "123123123123");
+        test.add(tilfeldigTransaksjon);
+
+        List<Konto> konti = new ArrayList<>();
+        Konto konto1 = new Konto("105010123456", "01010110523",
+                720, "Lønnskonto", "NOK", null);
+        konti.add(konto1);
+
+        when(sjekk.loggetInn()).thenReturn("01010110523");
+        when(repository.utforBetaling(3)).thenReturn("OK");
+
+        // act
+        List<Transaksjon> resultat = bankController.utforBetaling(3);
+
+        // assert
+        assertEquals(test, resultat);
+    }
+
+    @Test
+    public void utforBetaling_loggetInn_Feil(){
 
     }
 
@@ -190,8 +271,13 @@ public class EnhetstestBankController {
         assertNull(resultat);
     }
 
-    @Test
+    @Test // feil testing trengs
     public void endreKundeInfo_loggetInn(){
+
+    }
+
+    @Test
+    public void endreKundeInfo_loggetInn_Feil(){
 
     }
 

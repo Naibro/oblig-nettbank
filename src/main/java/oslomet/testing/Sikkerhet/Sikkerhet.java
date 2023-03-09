@@ -68,7 +68,7 @@ public class Sikkerhet {
     @Autowired
     private DataSource dataSource;
 
-    @GetMapping("/initDB")
+    @GetMapping("/initDBsikkerhet")
     public String initDB(){
         return rep.initDB(dataSource);
     }

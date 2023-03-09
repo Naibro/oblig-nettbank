@@ -75,7 +75,6 @@ public class EnhetstestBankController {
         konti.add(konto2);
 
         when(sjekk.loggetInn()).thenReturn("01010110523");
-
         when(repository.hentKonti(anyString())).thenReturn(konti);
 
         // act

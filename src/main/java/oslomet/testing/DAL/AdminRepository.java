@@ -30,6 +30,40 @@ public class AdminRepository {
         }
     }
 
+    public String registrerKunde(Kunde kunde) {
+        // Sjekk om nytt postnr ligger i Poststeds-tabellen, dersom ikke legg det inn
+        String sql;
+        int etPostSted;
+        try {
+            sql = "SELECT count(*) FROM Poststed WHERE postnr = ?";
+            etPostSted = db.queryForObject(sql, Integer.class, kunde.getPostnr());
+        }
+        catch(Exception e){
+            return "Feil";
+        }
+        if(etPostSted == 0)
+        {
+            // ligger ikke i poststedstabellen
+            try {
+                sql = "Insert Into Poststed (Postnr, Poststed) Values (?,?)";
+                db.update(sql, kunde.getPostnr(), kunde.getPoststed());
+            }
+            catch(Exception e){
+                return "Feil";
+            }
+        }
+        try{
+            sql = "Insert into Kunde (Personnummer,Fornavn,Etternavn,Adresse,Postnr,Telefonnr,Passord) " +
+                    "Values (?,?,?,?,?,?,?)";
+            db.update(sql,kunde.getPersonnummer(),kunde.getFornavn(),kunde.getEtternavn(),
+                    kunde.getAdresse(),kunde.getPostnr(),kunde.getTelefonnr(),kunde.getPassord());
+        }
+        catch(Exception e){
+            return "Feil";
+        }
+        return "OK";
+    }
+
     public String endreKundeInfo(Kunde kunde) {
         // Sjekk om nytt postnr ligger i Poststeds-tabellen, dersom ikke legg det inn
         int etPostSted;
@@ -65,40 +99,6 @@ public class AdminRepository {
         return "OK";
     }
 
-    public String registrerKunde(Kunde kunde) {
-        // Sjekk om nytt postnr ligger i Poststeds-tabellen, dersom ikke legg det inn
-        String sql;
-        int etPostSted;
-        try {
-            sql = "SELECT count(*) FROM Poststed WHERE postnr = ?";
-            etPostSted = db.queryForObject(sql, Integer.class, kunde.getPostnr());
-        }
-        catch(Exception e){
-            return "Feil";
-        }
-        if(etPostSted == 0)
-        {
-            // ligger ikke i poststedstabellen
-            try {
-                sql = "Insert Into Poststed (Postnr, Poststed) Values (?,?)";
-                db.update(sql, kunde.getPostnr(), kunde.getPoststed());
-            }
-            catch(Exception e){
-                return "Feil";
-            }
-        }
-        try{
-            sql = "Insert into Kunde (Personnummer,Fornavn,Etternavn,Adresse,Postnr,Telefonnr,Passord) " +
-                    "Values (?,?,?,?,?,?,?)";
-                    db.update(sql,kunde.getPersonnummer(),kunde.getFornavn(),kunde.getEtternavn(),
-                    kunde.getAdresse(),kunde.getPostnr(),kunde.getTelefonnr(),kunde.getPassord());
-        }
-        catch(Exception e){
-            return "Feil";
-        }
-        return "OK";
-    }
-
     public String slettKunde(String personnummer)  {
         try{
             String sql = "Delete From Kunde Where Personnummer = ?";
@@ -108,6 +108,12 @@ public class AdminRepository {
             return "Feil";
         }
         return "OK";
+    }
+
+    public List<Konto> hentAlleKonti() {
+        String sql = "Select * from Konto ORDER BY Kontonummer";
+        List<Konto> alleKonti = db.query(sql,new BeanPropertyRowMapper(Konto.class));
+        return alleKonti;
     }
 
     public String registrerKonto(Konto konto) {
@@ -150,12 +156,6 @@ public class AdminRepository {
             return "Feil";
         }
         return "OK";
-    }
-
-    public List<Konto> hentAlleKonti() {
-        String sql = "Select * from Konto ORDER BY Kontonummer";
-        List<Konto> alleKonti = db.query(sql,new BeanPropertyRowMapper(Konto.class));
-        return alleKonti;
     }
 
     public String slettKonto(String kontonummer)

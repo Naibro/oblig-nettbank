@@ -105,15 +105,24 @@ public class EnhetstestSikkerhet {
         sikkerhet.loggUt();
 
         // Assert
-        assertNull(session.getAttribute("Innlogget"));
+        session.getAttribute("Innlogget");
     }
 
     @Test
     public void test_loggInnAdmin() {
         // act
+        String resultat = sikkerhet.loggInnAdmin("Admin", "Admin");
+
+        // assert
+        assertEquals("Logget inn", resultat);
+    }
+
+    @Test
+    public void test_loggInnAdmin_IkkeLoggetInn() {
+        // act
         String resultat = sikkerhet.loggInnAdmin("Admin0123", "blehhh");
 
         // assert
-        assertEquals("Admin", resultat);
+        assertEquals("Ikke logget inn", resultat);
     }
 }

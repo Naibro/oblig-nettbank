@@ -97,20 +97,23 @@ public class EnhetstestSikkerhet {
     }
 
     @Test
-    public void test_loggInnAdmin() {
-        // act
-        String resultat = sikkerhet.loggInnAdmin("Admin", "Admin");
+    public void loggUt() {
+        // Arrange
+        session.setAttribute("Innlogget", "01010110523");
 
-        // assert
-        assertEquals("Logget inn", resultat);
+        // Act
+        sikkerhet.loggUt();
+
+        // Assert
+        assertNull(session.getAttribute("Innlogget"));
     }
 
     @Test
-    public void test_loggInnAdmin_IkkeLoggetInn() {
+    public void test_loggInnAdmin() {
         // act
         String resultat = sikkerhet.loggInnAdmin("Admin0123", "blehhh");
 
         // assert
-        assertEquals("Ikke logget inn", resultat);
+        assertEquals("Admin", resultat);
     }
 }

@@ -23,12 +23,15 @@ import static org.mockito.Mockito.when;
 public class EnhetstestAdminKundeController {
 
     @InjectMocks
+    // denne skal testes
     private AdminKundeController adminKundeController;
 
     @Mock
+    // denne skal Mock'es
     private AdminRepository repository;
 
     @Mock
+    // denne skal Mock'es
     private Sikkerhet sjekk;
 
     @Test
@@ -44,7 +47,7 @@ public class EnhetstestAdminKundeController {
         kundeliste.add(enKunde);
         kundeliste.add(enKunde2);
 
-        when(sjekk.loggetInn()).thenReturn("admin");
+        when(sjekk.loggetInn()).thenReturn("Admin");
         when(repository.hentAlleKunder()).thenReturn(kundeliste);
 
         // act
@@ -73,7 +76,7 @@ public class EnhetstestAdminKundeController {
                 "Lana", "Jensen", "Askerveien 25", "3270",
                 "Asker", "22225555", "HeiHei");
 
-        when(sjekk.loggetInn()).thenReturn("01010110523");
+        when(sjekk.loggetInn()).thenReturn("Admin");
         when(repository.registrerKunde(any(Kunde.class))).thenReturn("OK");
 
         // act
@@ -90,7 +93,7 @@ public class EnhetstestAdminKundeController {
                 "Lene", "Jensen", "Askerveien 22", "4033",
                 "Stavanger", "22224444", "HeiHei");
 
-        when(sjekk.loggetInn()).thenReturn("01010110523");
+        when(sjekk.loggetInn()).thenReturn("Admin");
         when(repository.registrerKunde(enKunde_nyttPoststed)).thenReturn("OK");
 
         // act
@@ -107,7 +110,7 @@ public class EnhetstestAdminKundeController {
                 "Lana", "Jensen", "Askerveien 25", "3270",
                 "Asker", "22225555", "HeiHei");
 
-        when(sjekk.loggetInn()).thenReturn("01010110523");
+        when(sjekk.loggetInn()).thenReturn("Admin");
         when(repository.registrerKunde(any(Kunde.class))).thenReturn("Feil");
 
         // act
@@ -124,7 +127,7 @@ public class EnhetstestAdminKundeController {
                 "Lene", "Jensen", "Askerveien 22", "4033",
                 "Stavanger", "22224444", "HeiHei");
 
-        when(sjekk.loggetInn()).thenReturn("01010110523");
+        when(sjekk.loggetInn()).thenReturn("Admin");
         when(repository.registrerKunde(any(Kunde.class))).thenReturn("Feil");
 
         // act
@@ -157,7 +160,7 @@ public class EnhetstestAdminKundeController {
                 "Lana", "Jensen", "Askerveien 25", "3270",
                 "Asker", "22225555", "HeiHei");
 
-        when(sjekk.loggetInn()).thenReturn("01010110523");
+        when(sjekk.loggetInn()).thenReturn("Admin");
         when(repository.endreKundeInfo(any(Kunde.class))).thenReturn("OK");
 
         // act
@@ -174,7 +177,7 @@ public class EnhetstestAdminKundeController {
                 "Lene", "Jensen", "Askerveien 22", "4033",
                 "Stavanger", "22224444", "HeiHei");
 
-        when(sjekk.loggetInn()).thenReturn("01010110523");
+        when(sjekk.loggetInn()).thenReturn("Admin");
         when(repository.endreKundeInfo(any(Kunde.class))).thenReturn("OK");
 
         // act
@@ -191,7 +194,7 @@ public class EnhetstestAdminKundeController {
                 "Lana", "Jensen", "Askerveien 25", "3270",
                 "Asker", "22225555", "HeiHei");
 
-        when(sjekk.loggetInn()).thenReturn("01010110523");
+        when(sjekk.loggetInn()).thenReturn("Admin");
         when(repository.endreKundeInfo(any(Kunde.class))).thenReturn("Feil");
 
         // act
@@ -208,7 +211,7 @@ public class EnhetstestAdminKundeController {
                 "Lene", "Jensen", "Askerveien 22", "4033",
                 "Stavanger", "22224444", "HeiHei");
 
-        when(sjekk.loggetInn()).thenReturn("01010110523");
+        when(sjekk.loggetInn()).thenReturn("Admin");
         when(repository.endreKundeInfo(any(Kunde.class))).thenReturn("Feil");
 
         // act
@@ -237,7 +240,7 @@ public class EnhetstestAdminKundeController {
     @Test
     public void slettKunde_LoggetInn(){
         // arrange
-        when(sjekk.loggetInn()).thenReturn("01010110523");
+        when(sjekk.loggetInn()).thenReturn("Admin");
         when(repository.slettKunde("01010110523")).thenReturn("OK");
 
         //act
@@ -250,7 +253,7 @@ public class EnhetstestAdminKundeController {
     @Test
     public void slettKunde_LoggetInnFeil(){
         // arrange
-        when(sjekk.loggetInn()).thenReturn("01010110523");
+        when(sjekk.loggetInn()).thenReturn("Admin");
         when(repository.slettKunde("01010110523")).thenReturn("Feil");
 
         //act
@@ -269,6 +272,6 @@ public class EnhetstestAdminKundeController {
         String resultat = adminKundeController.slett("01010110523");
 
         // assert
-        assertEquals("Ikke logget inn",resultat);
+        assertEquals("Ikke logget inn", resultat);
     }
 }

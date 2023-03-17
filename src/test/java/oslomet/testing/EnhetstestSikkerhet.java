@@ -98,13 +98,19 @@ public class EnhetstestSikkerhet {
 
     @Test
     public void test_loggInnAdmin() {
-        // arrange
-        when(repository.loggInnAdmin(anyString(), anyString())).thenReturn("Admin");
+        // act
+        String resultat = sikkerhet.loggInnAdmin("Admin", "Admin");
 
+        // assert
+        assertEquals("Logget inn", resultat);
+    }
+
+    @Test
+    public void test_loggInnAdmin_IkkeLoggetInn() {
         // act
         String resultat = sikkerhet.loggInnAdmin("Admin0123", "blehhh");
 
         // assert
-        assertEquals("Admin", resultat);
+        assertEquals("Ikke logget inn", resultat);
     }
 }
